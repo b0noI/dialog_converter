@@ -1,7 +1,7 @@
 # The converter of the dialog data
 
 This is the converter of the dialog data, that is used in order to prepare the 
-[https://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html](the Cornell Movie Dialogs Corpus) in the way that it could be used as the training input for the [https://www.tensorflow.org/versions/r0.12/tutorials/recurrent/index.html](Recurrent Neural Networks). In order to simplify the process, the code in the repository is self-contained and, in order to prepare the training data, you can just execute the following command:
+[the Cornell Movie Dialogs Corpus](https://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html) in the way that it could be used as the training input for the [Recurrent Neural Networks](https://www.tensorflow.org/versions/r0.12/tutorials/recurrent/index.html). In order to simplify the process, the code in the repository is self-contained and, in order to prepare the training data, you can just execute the following command:
 
     python converter.py
 
