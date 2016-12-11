@@ -33,7 +33,7 @@ Here are examples of lines from the file:
     
 As can be seen, the string ```+++$+++```is used as a fields separator. Each line includes following fields:
 
-* lineID (e.g. L1045). As can be seen from the example: yes lines are sorted, however they are sorted in desend order ¯\\_(ツ)_/¯;
+* lineID (e.g. L1045). As can be seen from the example: yes lines are sorted, however they are sorted in desend order ¯\\\_(ツ)\_/¯;
 * characterID (who uttered this phrase, e.g.: u0);
 * movieID (e.g.: m0);
 * character name (e.g.: BIANCA);
