@@ -23,3 +23,18 @@ In order to understand what type of data is in the corpus here is the quote for 
     - in total 304,713 utterances
 
 The corpus itself contains different files. The one, that we are interested in, is the following one: ```movie_lines.txt```. The file contains actual conversations. Each line in the file is a phrase from a dialog, that was observed in a movie(with a meta data). All phrases have been sorted with respect to how they appear in a script, so no need to sort anything.
+
+## Lines from the movie_lines file
+
+Here are examples of lines from the file:
+
+    L1045 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ They do not!
+    L1044 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ They do to!
+    
+As can be seen, the string ```+++$+++```is used as a fields separator. Each line includes following fields:
+
+* lineID (e.g. L1045). As can be seen from the example: yes lines are sorted, however they are sorted in desend order ¯\_(ツ)_/¯;
+* characterID (who uttered this phrase, e.g.: u0);
+* movieID (e.g.: m0);
+* character name (e.g.: BIANCA);
+* text of the utterance (e.g.: They do to!);
