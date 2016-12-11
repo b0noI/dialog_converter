@@ -14,6 +14,7 @@ def get_line_number_from_id(line_id):
 	return int(line_id[-1:])
 
 def parse_line():
+	# Buffer of the stat machine.
 	last_ch_id = None
 	last_movie_id = None
 	last_line = None
@@ -23,6 +24,7 @@ def parse_line():
 	    i = len(dialogs) - j - 1
 	    line_id, character_id, movie_id, _, line_txt = dialogs[i].split(LINE_SEP)
 	    line_number = get_line_number_from_id(line_id)
+	    # If movie ID has changed, bufer of the stat machine need to be set to new dialog.
 	    if movie_id != last_movie_id:
 	    	if DEBUG:
 	    		print("Movie id have changed from {} to {}, dropping buffer.".format(last_movie_id, movie_id))
@@ -31,6 +33,7 @@ def parse_line():
 	    	last_line = line_txt
 	    	last_line_number = line_number
 	    	continue
+	    # If lines are from different dialogs, buufer of the stat machine need to be set to new dialog.
 	    if abs(line_number - last_line_number) > 1:
 	    	if DEBUG:
 	    		print("Line number changed to more then 1 from {} to {}. Dropping buffer.".format(last_line_number, line_number))
@@ -39,6 +42,7 @@ def parse_line():
 	    	last_line = line_txt
 	    	last_line_number = line_number
 	    	continue
+	    # If same characters appears 2+ times buffer need to be erased.
 	    if last_ch_id == character_id:
 	    	if DEBUG:
 	    		print("Same character({} == {}) speaking 2 times in row.".format(last_ch_id, character_id))
