@@ -9,6 +9,7 @@ with open(FNAME) as f:
 
 result = [[], []]
 
+# Example of the lineId: L19690
 def get_line_number_from_id(line_id):
 	return int(line_id[-1:])
 
