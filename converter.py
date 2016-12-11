@@ -1,9 +1,10 @@
-fname = "lines.txt"
+FNAME = "lines.txt"
 LINE_SEP = " +++$+++ "
+DEBUG = False
 
 
 dialogs = None
-with open(fname) as f:
+with open(FNAME) as f:
     dialogs = f.readlines()
 
 result = [[], []]
@@ -17,29 +18,33 @@ def parse_line(last_ch_id, last_movie_id, last_line, last_line_number, i, lines)
 	    line_id, character_id, movie_id, _, line_txt = lines[i].split(LINE_SEP)
 	    line_number = get_line_number_from_id(line_id)
 	    if movie_id != last_movie_id:
-	    	print("Movie id have changed from {} to {}, dropping buffer.".format(last_movie_id, movie_id))
+	    	if DEBUG:
+	    		print("Movie id have changed from {} to {}, dropping buffer.".format(last_movie_id, movie_id))
 	    	last_ch_id = character_id
 	    	last_movie_id = movie_id
 	    	last_line = line_txt
 	    	last_line_number = line_number
 	    	continue
 	    if abs(line_number - last_line_number) > 1:
-	    	print("Line number changed to more then 1 from {} to {}. Dropping buffer.".format(last_line_number, line_number))
+	    	if DEBUG:
+	    		print("Line number changed to more then 1 from {} to {}. Dropping buffer.".format(last_line_number, line_number))
 	    	last_ch_id = character_id
 	    	last_movie_id = movie_id
 	    	last_line = line_txt
 	    	last_line_number = line_number
 	    	continue
 	    if last_ch_id == character_id:
-	    	print("Same character({} == {}) speaking 2 times in row.".format(last_ch_id, character_id))
+	    	if DEBUG:
+	    		print("Same character({} == {}) speaking 2 times in row.".format(last_ch_id, character_id))
 	    	last_ch_id = None
 	    	last_movie_id = None
 	    	last_line = None
 	    	last_line_number = None
 	    	continue
 	    else:
-	    	print("Looks like: same film ({} == {}), line only diff on 1 ({} = {} + 1), and characters are different ({} != {}). Saving"
-	    		.format(last_movie_id, movie_id, last_line_number, line_number, last_ch_id, character_id))
+	    	if DEBUG:
+	    		print("Looks like: same film ({} == {}), line only diff on 1 ({} = {} + 1), and characters are different ({} != {}). Saving"
+	    			.format(last_movie_id, movie_id, last_line_number, line_number, last_ch_id, character_id))
 	    	result[0].append(last_line)
 	    	result[1].append(line_txt)
 	    	last_ch_id = None
@@ -50,12 +55,13 @@ def parse_line(last_ch_id, last_movie_id, last_line, last_line_number, i, lines)
 
 parse_line(None, None, None, None, 0, dialogs)
 
-for i in range(0, len(result[0])):
-	print ("FROM {}\n TO {}".format(result[0][i], result[1][i]))
+if DEBUG:
+	for i in range(0, len(result[0])):
+		print ("FROM {}\n TO {}".format(result[0][i], result[1][i]))
 
 size = len(result[0])
-left_f = open('vocab{}.en'.format(size),'w')
-right_f = open('vocab{}.fr'.format(size),'w')
+left_f = open('train.a'.format(size),'w')
+right_f = open('train.b'.format(size),'w')
 
 for i in range(0, len(result[0])):
 	left_f.write(result[0][i])
