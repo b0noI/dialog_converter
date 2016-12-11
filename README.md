@@ -38,3 +38,11 @@ As can be seen, the string ```+++$+++```is used as a fields separator. Each line
 * movieID (e.g.: m0);
 * character name (e.g.: BIANCA);
 * text of the utterance (e.g.: They do to!);
+
+# What exactly the script extracts from the movie_lines file?
+
+For the simple RNN network only special cases of the dialogs are useful for the training. Technically you can train RNN with any type of dialogs, however for the sake of simplicity we are limiting ourselves to cases with simple dialogs. A dialog is considered simple if:
+
+* Only 2 persons are participating in a dialog;
+* Each dialog line contains only one sentence;
+* There should not be 2 consequent lines that belong to a same character;
