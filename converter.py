@@ -12,10 +12,15 @@ result = [[], []]
 def get_line_number_from_id(line_id):
 	return int(line_id[-1:])
 
-def parse_line(last_ch_id, last_movie_id, last_line, last_line_number, i, lines):
-	for j in range(0, len(lines)):
-	    i = len(lines) - j - 1
-	    line_id, character_id, movie_id, _, line_txt = lines[i].split(LINE_SEP)
+def parse_line():
+	last_ch_id = None
+	last_movie_id = None
+	last_line = None
+	last_line_number = None
+	i = 0
+	for j in range(0, len(dialogs)):
+	    i = len(dialogs) - j - 1
+	    line_id, character_id, movie_id, _, line_txt = dialogs[i].split(LINE_SEP)
 	    line_number = get_line_number_from_id(line_id)
 	    if movie_id != last_movie_id:
 	    	if DEBUG:
@@ -53,7 +58,7 @@ def parse_line(last_ch_id, last_movie_id, last_line, last_line_number, i, lines)
 	    	last_line_number = None
 	    	continue
 
-parse_line(None, None, None, None, 0, dialogs)
+parse_line()
 
 if DEBUG:
 	for i in range(0, len(result[0])):
