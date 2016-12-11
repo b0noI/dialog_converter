@@ -43,6 +43,16 @@ As can be seen, the string ```+++$+++```is used as a fields separator. Each line
 
 For the simple RNN network only special cases of the dialogs are useful for the training. Technically you can train RNN with any type of dialogs, however for the sake of simplicity we are limiting ourselves to cases with simple dialogs. A dialog is considered simple if:
 
-* Only 2 persons are participating in a dialog;
-* Each dialog line contains only one sentence;
-* There should not be 2 consequent lines that belong to a same character;
+1. Only 2 persons are participating in a dialog;
+2. There should not be 2 consequent lines that belong to a same character;
+
+## Bad dialog examples
+
+In order to understand a "simple dialog" requirements let me show the example of dialogues that are not satisfying above requirements:
+
+    L280 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ There.
+    L277 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ Well, there's someone I think might be --
+    L276 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ How is our little Find the Wench A Date plan progressing?
+    L275 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ Forget French.
+ 
+The dialog violates the second requirement. First, there are 2 consequent lines from the same character (u2/CAMERON), then, there are 2 consequent lines from the other character (u0/BIANCA).
