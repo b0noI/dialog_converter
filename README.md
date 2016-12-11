@@ -48,7 +48,7 @@ For the simple RNN network only special cases of the dialogs are useful for the 
 
 ## Bad dialog examples
 
-In order to understand a "simple dialog" requirements let me show the example of dialogues that are not satisfying above requirements:
+In order to understand a "simple dialog" requirements let me show the example of the dialogue that is not satisfying above requirements:
 
     L280 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ There.
     L277 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ Well, there's someone I think might be --
@@ -56,3 +56,35 @@ In order to understand a "simple dialog" requirements let me show the example of
     L275 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ Forget French.
  
 The dialog violates the second requirement. First, there are 2 consequent lines from the same character (u2/CAMERON), then, there are 2 consequent lines from the other character (u0/BIANCA).
+
+# How the script's output is structured
+
+The script produces 2 files as the output:
+
+* train.a;
+* train.b;
+
+Files contain simple dialogs that are split into 2 parts. In an each simple dialog, lines are split into 2 parts, one part with lines that have even numbers, another part contains lines with non-even numbers. Let me show an example:
+
+    L19693 +++$+++ u198 +++$+++ m13 +++$+++ ELAINE +++$+++ It's a damn good thing you don't know how much he hates your guts.
+    L19692 +++$+++ u214 +++$+++ m13 +++$+++ STRIKER +++$+++ It's a damn good thing he doesn't know how much I hate his guts.
+    L19691 +++$+++ u198 +++$+++ m13 +++$+++ ELAINE +++$+++ Sluggish. Like a wet sponge.
+    L19690 +++$+++ u214 +++$+++ m13 +++$+++ STRIKER +++$+++ Sluggish. Like a wet sponge.
+
+Lines number 0 and 2 (even) will go to the one file (```train.a```):
+
+    L19693 +++$+++ u198 +++$+++ m13 +++$+++ ELAINE +++$+++ It's a damn good thing you don't know how much he hates your guts.
+    L19691 +++$+++ u198 +++$+++ m13 +++$+++ ELAINE +++$+++ Sluggish. Like a wet sponge.
+
+Lines number 1 and 3 (non-even) will go to the another file (```train.b```):
+
+    L19692 +++$+++ u214 +++$+++ m13 +++$+++ STRIKER +++$+++ It's a damn good thing he doesn't know how much I hate his guts.
+    L19690 +++$+++ u214 +++$+++ m13 +++$+++ STRIKER +++$+++ Sluggish. Like a wet sponge.
+
+As the result, there will be 2 files, each line of the file ```train.a``` will contain a replica from a simple dialog, while a line with the same number from the file ```train.b``` contains answer to the phrase from the same dialog. For example line number 0 form the ```train.a``` might contain:
+
+    It's a damn good thing he doesn't know how much I hate his guts.
+
+while the line number 0 from the ```train.b``` will contain:
+
+    It's a damn good thing you don't know how much he hates your guts.
