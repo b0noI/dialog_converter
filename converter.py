@@ -1,4 +1,4 @@
-FNAME = "lines.txt"
+FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
 DEBUG = False
 
