@@ -1,19 +1,15 @@
+from sklearn.model_selection import train_test_split
+
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
 DEBUG = False
-
-
-dialogs = None
-with open(FNAME) as f:
-    dialogs = f.readlines()
-
-result = [[], []]
 
 # Example of the lineId: L19690
 def get_line_number_from_id(line_id):
     return int(line_id[-1:])
 
-def parse_line():
+def parse_line(dialogs):
+    result = [[], []]
     # Buffer of the stat machine.
     last_ch_id = None
     last_movie_id = None
@@ -55,27 +51,37 @@ def parse_line():
             if DEBUG:
                 print("Looks like: same film ({} == {}), line only diff on 1 ({} = {} + 1), and characters are different ({} != {}). Saving"
                     .format(last_movie_id, movie_id, last_line_number, line_number, last_ch_id, character_id))
-            result[0].append(last_line)
-            result[1].append(line_txt)
+            result[0].append(last_line.lower())
+            result[1].append(line_txt.lower())
             last_ch_id = None
             last_movie_id = None
             last_line = None
             last_line_number = None
             continue
+    return result
 
-parse_line()
+def write_dialogs(dialogs, file_prefix):
+    size = len(dialogs[0])
+    left_f = open(file_prefix + '.a'.format(size), 'w')
+    right_f = open(file_prefix + '.b'.format(size), 'w')
+    for i in range(0, len(dialogs[0])):
+        left_f.write(dialogs[0][i])
+        right_f.write(dialogs[1][i])
+    left_f.close()
+    right_f.close()
 
-if DEBUG:
-    for i in range(0, len(result[0])):
-        print ("FROM {}\n TO {}".format(result[0][i], result[1][i]))
 
-size = len(result[0])
-left_f = open('train.a'.format(size),'w')
-right_f = open('train.b'.format(size),'w')
+if __name__ == "__main__":
+    dialogs = None
+    with open(FNAME) as f:
+        dialogs = f.readlines()
 
-for i in range(0, len(result[0])):
-    left_f.write(result[0][i])
-    right_f.write(result[1][i])
+    result = parse_line(dialogs)
 
-left_f.close()
-right_f.close()
+    if DEBUG:
+        for i in range(0, len(result[0])):
+            print ("FROM {}\n TO {}".format(result[0][i], result[1][i]))
+
+    train_a, test_a, train_b, test_b = train_test_split(result[0], result[1], test_size=0.2)
+    write_dialogs([train_a, train_b], "train")
+    write_dialogs([test_a, test_b], "test")
