@@ -5,9 +5,11 @@ This is the converter of the dialog data, that is used in order to prepare the
 
 ## Requirements
 
-The script only requires the ```scikit-learn``` in order to work. If you do not have it, you can easily install it with the following command:
+The script requires:
 
-    sudo pip install scikit-learn
+ * ```python3```;
+ * ```scikit-learn```;
+ * ```nltk```;
 
 ## Usage
 
