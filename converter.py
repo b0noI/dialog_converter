@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
-DEBUG = True
+DEBUG = False
 
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     if DEBUG:
         print("Amount of a dialogs after the filtering: {}".format(len(result[0])))
 
-    train_a, test_a, train_b, test_b = train_test_split(result[0], result[1], test_size=0.2)
+    train_a, test_a, train_b, test_b = train_test_split(result[0], result[1], test_size=0.05)
     train_dialogs = [train_a, train_b]
     test_dialogs = [test_a, test_b]
     write_dialogs(train_dialogs, "train")
