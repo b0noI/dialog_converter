@@ -1,12 +1,11 @@
-import nltk.data
-
 import random
+# import nltk.data
 
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
 DEBUG = True
 
-SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
+# SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
 
 # Example of the lineId: L19690
@@ -98,10 +97,39 @@ def write_dialogs(dialogs):
     with open("dialogs.raw", 'w') as foutput:
         for dialog in dialogs:
             if len(dialog[0]) > 0:
-                for idx, question in enumerate(dialog[0]):
-                    answer = dialog[1][idx]
-                    foutput.write("Q: {}\nA: {}\n".format(question.replace('\n', ' . '), answer.replace('\n', ' . ')))
-                foutput.write("###\n")
+                for size_of_dialog in range(1, len(dialog[0])):
+                    # Adding correct record
+                    to_write = ""
+                    for idx, question in enumerate(dialog[0]):
+                        if idx == size_of_dialog:
+                            break
+                        answer = dialog[1][idx]
+                        to_write = "{} Q: {} A: {} . ".format(to_write,
+                                                              question.replace('\n', ' . '),
+                                                              answer.replace('\n', ' . '))
+                    foutput.write(to_write)
+                    foutput.write("\n")
+                    # Adding in-correct record
+                    to_write = ""
+                    for idx, question in enumerate(dialog[0]):
+                        if idx == size_of_dialog:
+                            break
+                        if idx == size_of_dialog - 1:
+                            answer = ger_random_non_empty_dialog(dialogs)[1][0]
+                        else:
+                            answer = dialog[1][idx]
+                        to_write = "{} Q: {} A: {} . ".format(to_write,
+                                                              question.replace('\n', ' . '),
+                                                              answer.replace('\n', ' . '))
+                    foutput.write(to_write)
+                    foutput.write("\n")
+
+
+def ger_random_non_empty_dialog(dialogs):
+    initial_idx = random.randint(0, len(dialogs) - 1)
+    while len(dialogs[initial_idx][0]) == 0:
+        initial_idx += 1
+    return dialogs[initial_idx]
 
 
 if __name__ == "__main__":
