@@ -4,7 +4,7 @@ import random
 
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
-DEBUG = False
+DEBUG = True
 
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
@@ -60,9 +60,13 @@ def parse_raw_dialogs(raw_dialogs):
                       " Lines will be concatenated.".format(last_ch_id, character_id))
             last_line = "{} . {}".format(last_line, line_txt)
             last_line_number = line_number
+            last_movie_id = movie_id
             continue
         # 3 persons dialog, dropping the buffer without saving it
-        if len(participants) == 2 and not character_id in participants:
+        if len(participants) == 2 and character_id not in participants:
+            if DEBUG:
+                print("Dropping buffer since there are more then 2 participants, already have: {} and the new is {}"
+                      .format(str(participants), character_id))
             last_ch_id = character_id
             last_movie_id = movie_id
             last_line = line_txt
@@ -75,28 +79,29 @@ def parse_raw_dialogs(raw_dialogs):
                 print("Looks like: same film ({} == {}), lines from {} to {} to the same character, and next character"
                       " is different ({} != {}). Saving".format(last_movie_id, movie_id, last_line_number, line_number,
                                                                 last_ch_id, character_id))
-            q, a = one_parsed_dialog
-            q.append(last_line.lower())
-            a.append(line_txt.lower())
-            last_ch_id = None
-            last_movie_id = None
-            last_line = None
-            last_line_number = None
+            if DEBUG:
+                print("Size of q is: {}".format(len(one_parsed_dialog[0])))
             if character_id not in participants:
                 participants.add(character_id)
+            if len(one_parsed_dialog[1]) == 0 or not one_parsed_dialog[1][-1] == last_line.lower():
+                one_parsed_dialog[0].append(last_line.lower())
+                one_parsed_dialog[1].append(line_txt.lower())
+            last_ch_id = character_id
+            last_movie_id = movie_id
+            last_line = line_txt
+            last_line_number = line_number
             continue
     return parsed_dialogs
 
 
-def write_dialogs(dialogs, file_prefix):
-    size = len(dialogs[0])
-    left_f = open(file_prefix + '.a'.format(size), 'w')
-    right_f = open(file_prefix + '.b'.format(size), 'w')
-    for i in range(0, len(dialogs[0])):
-        left_f.write(dialogs[0][i])
-        right_f.write(dialogs[1][i])
-    left_f.close()
-    right_f.close()
+def write_dialogs(dialogs):
+    with open("dialogs.raw", 'w') as foutput:
+        for dialog in dialogs:
+            if len(dialog[0]) > 0:
+                for idx, question in enumerate(dialog[0]):
+                    answer = dialog[1][idx]
+                    foutput.write("Q: {}\nA: {}\n".format(question.replace('\n', ' . '), answer.replace('\n', ' . ')))
+                foutput.write("###\n")
 
 
 if __name__ == "__main__":
@@ -110,16 +115,15 @@ if __name__ == "__main__":
         print("Amount of a dialogs: {}".format(len(dialogs)))
 
     if DEBUG:
-        print("Printing random dialogs")
-        idx = random.randint(0, len(dialogs) - 1)
-        q, a = dialogs[idx]
-        for idx, question in enumerate(q):
-            answer = a[idx]
-            print("Q: {}\nA: {}".format(question, answer))
+        dialogs_to_print = 5
+        print("Printing random {} dialogs".format(dialogs_to_print))
+        print("###")
+        for _ in range(0, dialogs_to_print):
+            idx = random.randint(0, len(dialogs) - 1)
+            q, a = dialogs[idx]
+            for idx, question in enumerate(q):
+                answer = a[idx]
+                print("Q: {}A: {}".format(question, answer))
+            print("###")
 
-
-    # train_a, test_a, train_b, test_b = train_test_split(dialogs[0], dialogs[1], test_size=0.05)
-    # train_dialogs = [train_a, train_b]
-    # test_dialogs = [test_a, test_b]
-    # write_dialogs(train_dialogs, "train")
-    # write_dialogs(test_dialogs, "test")
+    write_dialogs(dialogs)
