@@ -95,6 +95,8 @@ def write_dialogs(dialogs, file_prefix):
     left_f = open(file_prefix + '.a'.format(size), 'w')
     right_f = open(file_prefix + '.b'.format(size), 'w')
     for i in range(0, len(dialogs[0])):
+        if not dialogs[0][i].strip() or not dialogs[1][i].strip():
+            continue 
         left_f.write(dialogs[0][i])
         right_f.write(dialogs[1][i])
     left_f.close()
