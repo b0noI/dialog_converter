@@ -72,14 +72,15 @@ def sent_based_filter(dialogs):
     result_l = []
     result_r = []
     def is_sents_valid(sents, current_index, already_found_big_sent):
-        if current_index == len(sents):
+        if len(sents) >= 2:
             return True
+        if current_index == len(sents):
+            return False
         tokens = word_tokenize(sents[current_index])
         if len(tokens) <= 3:
             return is_sents_valid(sents, current_index + 1, already_found_big_sent)
-        if already_found_big_sent:
+        else:
             return True
-        return False
     def is_valid(text):
         sents = SENT_DETECTOR.tokenize(text.strip())
         return is_sents_valid(sents, 0, False)
