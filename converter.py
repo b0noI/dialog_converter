@@ -86,8 +86,8 @@ def sent_based_filter(dialogs):
     for i in range(0, len(dialogs[0])):
         l = dialogs[0][i]
         r = dialogs[1][i]
-        l_processed = " ".join(tknzr.tokenize(l.strip()))
-        r_processed = " ".join(tknzr.tokenize(r.strip()))
+        l_processed = " ".join(tknzr.tokenize(l.strip())) + "\n"
+        r_processed = " ".join(tknzr.tokenize(r.strip())) + "\n"
         if is_valid(l) and is_valid(r):
             result_l.append(l_processed)
             result_r.append(r_processed)
