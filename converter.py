@@ -78,8 +78,8 @@ def sent_based_filter(dialogs):
         if len(tokens) <= 3:
             return is_sents_valid(sents, current_index + 1, already_found_big_sent)
         if already_found_big_sent:
-            return False
-        return is_sents_valid(sents, current_index + 1, True)
+            return True
+        return False
     def is_valid(text):
         sents = SENT_DETECTOR.tokenize(text.strip())
         return is_sents_valid(sents, 0, False)
