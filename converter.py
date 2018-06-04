@@ -1,8 +1,15 @@
+import nltk.data
+
+from nltk.tokenize import word_tokenize
 from sklearn.model_selection import train_test_split
 
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
 DEBUG = False
+
+SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
+from nltk.tokenize import TweetTokenizer
+tknzr = TweetTokenizer()
 
 # Example of the lineId: L19690
 def get_line_number_from_id(line_id):
@@ -60,6 +67,34 @@ def parse_line(dialogs):
             continue
     return result
 
+
+def sent_based_filter(dialogs):
+    result_l = []
+    result_r = []
+    def is_sents_valid(sents, current_index, already_found_big_sent):
+        if len(sents) >= 2:
+            return True
+        if current_index == len(sents):
+            return False
+        tokens = word_tokenize(sents[current_index])
+        if len(tokens) <= 3:
+            return is_sents_valid(sents, current_index + 1, already_found_big_sent)
+        else:
+            return True
+    def is_valid(text):
+        sents = SENT_DETECTOR.tokenize(text.strip())
+        return is_sents_valid(sents, 0, False)
+    for i in range(0, len(dialogs[0])):
+        l = dialogs[0][i]
+        r = dialogs[1][i]
+        l_processed = " ".join(tknzr.tokenize(l.strip())) + "\n"
+        r_processed = " ".join(tknzr.tokenize(r.strip())) + "\n"
+        if is_valid(l) and is_valid(r):
+            result_l.append(l_processed)
+            result_r.append(r_processed)
+
+    return [result_l, result_r]
+
 def write_dialogs(dialogs, file_prefix):
     size = len(dialogs[0])
     left_f = open(file_prefix + '.a'.format(size), 'w')
@@ -75,15 +110,21 @@ def write_dialogs(dialogs, file_prefix):
 
 if __name__ == "__main__":
     dialogs = None
-    with open(FNAME) as f:
+    with open(FNAME, errors='ignore') as f:
         dialogs = f.readlines()
 
     result = parse_line(dialogs)
 
     if DEBUG:
-        for i in range(0, len(result[0])):
-            print ("FROM {}\n TO {}".format(result[0][i], result[1][i]))
+        print("Amount of a dialogs before the filtering: {}".format(len(result[0])))
 
-    train_a, test_a, train_b, test_b = train_test_split(result[0], result[1], test_size=0.2)
-    write_dialogs([train_a, train_b], "train")
-    write_dialogs([test_a, test_b], "test")
+    result = sent_based_filter(result)
+
+    if DEBUG:
+        print("Amount of a dialogs after the filtering: {}".format(len(result[0])))
+
+    train_a, test_a, train_b, test_b = train_test_split(result[0], result[1], test_size=0.05)
+    train_dialogs = [train_a, train_b]
+    test_dialogs = [test_a, test_b]
+    write_dialogs(train_dialogs, "train")
+    write_dialogs(test_dialogs, "test")
