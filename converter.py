@@ -96,11 +96,11 @@ def sent_based_filter(dialogs):
             result_l.append(l_processed)
             result_r.append(r_processed)
         if i > 1:
-           L = result_l[i-1] + "\n" + result_r[i-1]
+           L = result_l[i-1] + " \n " + result_r[i-1]
            R = result_l[i]
            result_l.append(L)
            result_r.append(R)
-           L = result_l[i-1] + "\n" + result_r[i-1] + "\n" + result_l[i]
+           L = result_l[i-1] + " \n " + result_r[i-1] + " \n " + result_l[i]
            R = result_r[i]
            result_l.append(L)
            result_r.append(R)
