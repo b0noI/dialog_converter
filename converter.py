@@ -1,15 +1,16 @@
-import nltk.data
-
+from nltk.tokenize import TweetTokenizer
 from nltk.tokenize import word_tokenize
+
 from sklearn.model_selection import train_test_split
 
+import nltk.data
+
+DEBUG = False
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
-DEBUG = False
-
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
-from nltk.tokenize import TweetTokenizer
 tknzr = TweetTokenizer()
+
 
 # Example of the lineId: L19690
 def get_line_number_from_id(line_id):
