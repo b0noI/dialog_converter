@@ -9,6 +9,8 @@ DEBUG = False
 FNAME = "movie_lines.txt"
 LINE_SEP = " +++$+++ "
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
+
+nltk.download('punkt')
 tknzr = TweetTokenizer()
 
 
@@ -93,7 +95,19 @@ def sent_based_filter(dialogs):
         if is_valid(l) and is_valid(r):
             result_l.append(l_processed)
             result_r.append(r_processed)
+        if i > 1:
+           L = result_l[i-1] + "\n" + result_r[i-1]
+           R = result_l[i]
+           result_l.append(L)
+           result_r.append(R)
+           L = result_l[i-1] + "\n" + result_r[i-1] + "\n" + result_l[i]
+           R = result_r[i]
+           result_l.append(L)
+           result_r.append(R)
 
+    print(len(result_l))
+    print(len(result_r))
+    
     return [result_l, result_r]
 
 def write_dialogs(dialogs, file_prefix):
