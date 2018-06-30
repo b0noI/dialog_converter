@@ -74,6 +74,8 @@ def parse_line(dialogs):
 def sent_based_filter(dialogs):
     result_l = []
     result_r = []
+    stacked_result_l = []
+    stacked_result_r = []
     def is_sents_valid(sents, current_index, already_found_big_sent):
         if len(sents) >= 2:
             return True
@@ -95,20 +97,39 @@ def sent_based_filter(dialogs):
         if is_valid(l) and is_valid(r):
             result_l.append(l_processed)
             result_r.append(r_processed)
-        if i > 1:
-           L = result_l[i-1] + " \n " + result_r[i-1]
-           R = result_l[i]
-           result_l.append(L)
-           result_r.append(R)
-           L = result_l[i-1] + " \n " + result_r[i-1] + " \n " + result_l[i]
-           R = result_r[i]
-           result_l.append(L)
-           result_r.append(R)
+            """
+                get the last two sentences and stacked them
+               #   P1    P2
+               1   A     B
+               2   C     D
+               3   E     F
+               Stack them
+                   A     B
+                   AB    C
+                   ABC   D
+                   C     D
+                   CD    E
+                   CDE   F 
+            """
+            if i >= 1:
+               delimeter = " $ "
+               sentence1_l = result_l[i-1]
+               sentence1_r = result_r[i-1]
+               sentence2_l = result_l[i]
+               sentence2_r = result_r[i]
+
+               stacked_result_l.append(sentence1_l)
+               stacked_result_r.append(sentence1_r)
+               stacked_result_l.append(sentence1_l + delimeter + sentence1_r)
+               stacked_result_r.append(sentence2_l)              
+               stacked_result_l.append(sentence1_l + delimeter + sentence1_r + delimeter + sentence2_l) 
+               stacked_result_r.append(sentence2_r)
 
     print(len(result_l))
     print(len(result_r))
-    
-    return [result_l, result_r]
+    print(len(stacked_result_l))
+    print(len(stacked_result_r))    
+    return [stacked_result_l, stacked_result_r]
 
 def write_dialogs(dialogs, file_prefix):
     size = len(dialogs[0])
