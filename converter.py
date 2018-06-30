@@ -92,38 +92,37 @@ def sent_based_filter(dialogs):
     for i in range(0, len(dialogs[0])):
         l = dialogs[0][i]
         r = dialogs[1][i]
-        l_processed = " ".join(tknzr.tokenize(l.strip())) + "\n"
-        r_processed = " ".join(tknzr.tokenize(r.strip())) + "\n"
-        if is_valid(l) and is_valid(r):
-            result_l.append(l_processed)
-            result_r.append(r_processed)
-            """
-                get the last two sentences and stacked them
-               #   P1    P2
-               1   A     B
-               2   C     D
-               3   E     F
-               Stack them
-                   A     B
-                   AB    C
-                   ABC   D
-                   C     D
-                   CD    E
-                   CDE   F 
-            """
-            if i >= 1:
-               delimeter = " $ "
-               sentence1_l = result_l[i-1]
-               sentence1_r = result_r[i-1]
-               sentence2_l = result_l[i]
-               sentence2_r = result_r[i]
+        l_processed = " ".join(tknzr.tokenize(l.strip()))
+        r_processed = " ".join(tknzr.tokenize(r.strip()))
+        result_l.append(l_processed)
+        result_r.append(r_processed)
+        """
+            get the last two sentences and stacked them
+           #   P1    P2
+           1   A     B
+           2   C     D
+           3   E     F
+           Stack them
+               A     B
+               AB    C
+               ABC   D
+               C     D
+               CD    E
+               CDE   F 
+        """
+        if i >= 1:
+           delimeter = " $ "
+           sentence1_l = result_l[i-1]
+           sentence1_r = result_r[i-1]
+           sentence2_l = result_l[i]
+           sentence2_r = result_r[i]
 
-               stacked_result_l.append(sentence1_l)
-               stacked_result_r.append(sentence1_r)
-               stacked_result_l.append(sentence1_l + delimeter + sentence1_r)
-               stacked_result_r.append(sentence2_l)              
-               stacked_result_l.append(sentence1_l + delimeter + sentence1_r + delimeter + sentence2_l) 
-               stacked_result_r.append(sentence2_r)
+           stacked_result_l.append(sentence1_l+"\n")
+           stacked_result_r.append(sentence1_r+"\n")
+           stacked_result_l.append(sentence1_l + delimeter + sentence1_r+"\n")
+           stacked_result_r.append(sentence2_l+"\n")              
+           stacked_result_l.append(sentence1_l + delimeter + sentence1_r + delimeter + sentence2_l+"\n") 
+           stacked_result_r.append(sentence2_r+"\n")
 
     print(len(result_l))
     print(len(result_r))
