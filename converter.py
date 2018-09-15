@@ -134,13 +134,16 @@ def write_dialogs(dialogs, file_prefix):
     size = len(dialogs[0])
     left_f = open(file_prefix + '.a'.format(size), 'w')
     right_f = open(file_prefix + '.b'.format(size), 'w')
+    combine_f = open(file_prefix + '.c'.format(size), 'w')
     for i in range(0, len(dialogs[0])):
         if not dialogs[0][i].strip() or not dialogs[1][i].strip():
-            continue 
+            continue
         left_f.write(dialogs[0][i])
         right_f.write(dialogs[1][i])
+        combine_f.write(dialogs[1][i].replace('\n','')+'\t'+dialogs[0][i])
     left_f.close()
     right_f.close()
+    combine_f.close()
 
 
 if __name__ == "__main__":
